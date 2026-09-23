@@ -109,6 +109,18 @@ export const TaxHomePage: React.FC<TaxHomePageProps> = ({
   // Dynamic Live Counter for Total Filings Processed - hooked to real user activities
   const [platformMetrics, setPlatformMetrics] = useState<PlatformMetrics>(getPlatformMetrics());
   const [counterPulse, setCounterPulse] = useState<boolean>(false);
+  const [usersCount, setUsersCount] = useState<number>(() => {
+    try {
+      const stored = localStorage.getItem('etax_users_registry');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) return parsed.length;
+      }
+    } catch (e) {
+      // fallback
+    }
+    return 0;
+  });
 
   useEffect(() => {
     // Subscribe to updates when forms are submitted anywhere in the app
@@ -116,6 +128,13 @@ export const TaxHomePage: React.FC<TaxHomePageProps> = ({
       setPlatformMetrics(newMetrics);
       setCounterPulse(true);
       setTimeout(() => setCounterPulse(false), 700);
+      try {
+        const stored = localStorage.getItem('etax_users_registry');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) setUsersCount(parsed.length);
+        }
+      } catch (e) {}
     });
     return unsubscribe;
   }, []);
@@ -393,29 +412,29 @@ export const TaxHomePage: React.FC<TaxHomePageProps> = ({
               </span>
             </h1>
 
-            {/* 4 Trust Badges Grid (2x2) */}
+            {/* 4 Trust Badges Grid (2x2) - Dynamic Live Data */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
               <div className="flex items-center space-x-3 bg-white/95 backdrop-blur-xs p-3.5 rounded-2xl border border-emerald-100 shadow-xs hover:border-emerald-200 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0 border border-amber-100 shadow-2xs">
-                  <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 shadow-2xs">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
                   <div className="text-sm font-black text-slate-900 leading-tight">
-                    {pageContent.homeHero.ratingText}
+                    {platformMetrics.totalFilings} Returns Filed
                   </div>
-                  <div className="text-[11px] text-slate-500">From 50,000+ reviews</div>
+                  <div className="text-[11px] text-slate-500">Live E-Filing System</div>
                 </div>
               </div>
 
               <div className="flex items-center space-x-3 bg-white/95 backdrop-blur-xs p-3.5 rounded-2xl border border-emerald-100 shadow-xs hover:border-emerald-200 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 shadow-2xs">
-                  <Users className="w-5 h-5 text-[#16a34a]" />
+                <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 border border-teal-100 shadow-2xs">
+                  <Users className="w-5 h-5 text-teal-600" />
                 </div>
                 <div>
                   <div className="text-sm font-black text-slate-900 leading-tight">
-                    {pageContent.homeHero.trustedUsersCount}
+                    {usersCount} Registered Taxpayers
                   </div>
-                  <div className="text-[11px] text-slate-500">Trusted Happy Users</div>
+                  <div className="text-[11px] text-slate-500">Verified Client Accounts</div>
                 </div>
               </div>
 
@@ -424,8 +443,8 @@ export const TaxHomePage: React.FC<TaxHomePageProps> = ({
                   <ShieldCheck className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <div className="text-sm font-black text-slate-900 leading-tight">Authorized by ITD</div>
-                  <div className="text-[11px] text-slate-500">Income Tax Dept e-Return</div>
+                  <div className="text-sm font-black text-slate-900 leading-tight">Direct ITD E-Filing</div>
+                  <div className="text-[11px] text-slate-500">Official Income Tax Pipeline</div>
                 </div>
               </div>
 
@@ -434,43 +453,20 @@ export const TaxHomePage: React.FC<TaxHomePageProps> = ({
                   <Zap className="w-5 h-5 text-purple-600" />
                 </div>
                 <div>
-                  <div className="text-sm font-black text-slate-900 leading-tight">Fast & Secure</div>
-                  <div className="text-[11px] text-slate-500">256-Bit SSL Bank-Grade</div>
+                  <div className="text-sm font-black text-slate-900 leading-tight">256-Bit SSL Encrypted</div>
+                  <div className="text-[11px] text-slate-500">Protected Client Data Privacy</div>
                 </div>
               </div>
             </div>
 
-            {/* Social Proof Bar with Real Taxpayer Photography */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="flex -space-x-2.5">
-                <img 
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" 
-                  alt="Verified Indian Taxpayer" 
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover shadow-2xs" 
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" 
-                  alt="Verified Indian Taxpayer" 
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover shadow-2xs" 
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" 
-                  alt="Certified CA Partner" 
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover shadow-2xs" 
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" 
-                  alt="Verified Indian Taxpayer" 
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover shadow-2xs" 
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div className="text-xs text-slate-700">
-                <span className="font-extrabold text-slate-900">2,50,000+ returns filed</span> with <strong className="text-emerald-700 font-bold">100% CPC approval guarantee</strong>
-              </div>
+            {/* Dynamic Real Status Counter - Increments with Actual Usage */}
+            <div className="flex items-center gap-2 pt-1 text-xs text-slate-700">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="font-extrabold text-slate-900">{platformMetrics.totalFilings} ITR filings tracked</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-emerald-700 font-bold">{usersCount} Registered Taxpayer Profiles</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-slate-500">Live Dynamic Activity Counter</span>
             </div>
 
           </div>
@@ -2391,158 +2387,6 @@ export const TaxHomePage: React.FC<TaxHomePageProps> = ({
             <p className="text-xs text-slate-500 leading-relaxed">
               Our algorithmic validation engine tests over 40 deduction sections and exemptions, ensuring you never leave a single rupee of eligible refund behind.
             </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* VERIFIED CUSTOMER REVIEWS & TAXPAYER STORIES */}
-      <section className="space-y-6">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold uppercase tracking-wider">
-            <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-            <span>Real Taxpayer Experiences</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-            Trusted by 2,80,000+ Indian Taxpayers Across All States
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500">
-            Read verified feedback from salaried techies, business entrepreneurs, stock traders, and freelancers who filed with zero stress.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          {/* Review 1 */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" 
-                  alt="Ananya Sharma"
-                  className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 shadow-xs"
-                  referrerPolicy="no-referrer"
-                />
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Ananya Sharma</h4>
-                  <p className="text-[11px] text-slate-500">Staff Architect • Bengaluru</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1 text-amber-400">
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <span className="text-[11px] font-bold text-slate-700 ml-1">5.0</span>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed italic">
-                "Uploaded my Form 16 and in 3 minutes the AI engine discovered ₹18,000 in additional 80CCD NPS deductions my HR missed. Received my refund in 8 days!"
-              </p>
-            </div>
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-              <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">ITR-1 Filed</span>
-              <span className="font-mono text-slate-500">Refund: ₹42,500</span>
-            </div>
-          </div>
-
-          {/* Review 2 */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" 
-                  alt="Rajesh Agarwal"
-                  className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 shadow-xs"
-                  referrerPolicy="no-referrer"
-                />
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Rajesh Agarwal</h4>
-                  <p className="text-[11px] text-slate-500">Managing Director • Kolkata</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1 text-amber-400">
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <span className="text-[11px] font-bold text-slate-700 ml-1">5.0</span>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed italic">
-                "Filing presumptive tax under Section 44AD and our quarterly GST reconciliation used to take weeks. The dedicated e-CA resolved everything flawlessly."
-              </p>
-            </div>
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-              <span className="text-purple-700 font-bold bg-purple-50 px-2 py-0.5 rounded-md">ITR-4 & GST</span>
-              <span className="font-mono text-slate-500">Zero Audit Defects</span>
-            </div>
-          </div>
-
-          {/* Review 3 */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=200&q=80" 
-                  alt="Dr. Priya Sen"
-                  className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 shadow-xs"
-                  referrerPolicy="no-referrer"
-                />
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Dr. Priya Sen</h4>
-                  <p className="text-[11px] text-slate-500">Consultant Surgeon • Mumbai</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1 text-amber-400">
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <span className="text-[11px] font-bold text-slate-700 ml-1">5.0</span>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed italic">
-                "Had multiple clinic consulting receipts plus mutual fund capital gains. Their tax notice assistance also quickly cleared a lingering 143(1) mismatch for me."
-              </p>
-            </div>
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-              <span className="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-md">ITR-3 & Legal</span>
-              <span className="font-mono text-slate-500">Demand Nullified</span>
-            </div>
-          </div>
-
-          {/* Review 4 */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" 
-                  alt="Vikram Malhotra"
-                  className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 shadow-xs"
-                  referrerPolicy="no-referrer"
-                />
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Vikram Malhotra</h4>
-                  <p className="text-[11px] text-slate-500">Freelance Designer • New Delhi</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1 text-amber-400">
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                <span className="text-[11px] font-bold text-slate-700 ml-1">5.0</span>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed italic">
-                "As an independent consultant with US clients, the 44ADA 50% presumptive profit rule saved me over ₹1.4 lakh in taxes. Clean interface with no clutter!"
-              </p>
-            </div>
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-              <span className="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md">ITR-4 Presumptive</span>
-              <span className="font-mono text-slate-500">Saved: ₹1,42,000</span>
-            </div>
           </div>
 
         </div>

@@ -13,7 +13,9 @@ import {
   FileText,
   KeyRound,
   RotateCcw,
-  ArrowLeft
+  ArrowLeft,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Language, UserProfile } from '../types';
 import { defaultUserProfiles } from '../initialData';
@@ -37,6 +39,7 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
   // Customer Login fields
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   // Customer Sign Up fields
   const [fullName, setFullName] = useState('');
@@ -44,6 +47,7 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
   const [email, setEmail] = useState('');
   const [panNumber, setPanNumber] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
 
   // Email OTP Verification fields
   const [signupStep, setSignupStep] = useState<'form' | 'otp'>('form');
@@ -138,13 +142,13 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
   const handleQuickDemoCustomer = () => {
     setIsLoading(true);
     setError('');
-    setSuccess('Logging in with demo taxpayer profile (Wasim Ali)...');
+    setSuccess('Logging in with demo taxpayer profile (Rahul Sharma)...');
     setTimeout(() => {
       setIsLoading(false);
       onLoginSuccess({
         ...defaultUserProfiles.salaried.profile,
-        name: 'Wasim Ali',
-        email: 'wasimali0202@gmail.com',
+        name: 'Rahul Sharma',
+        email: 'rahul.sharma@example.com',
         phone: '+91 98765-43210',
         role: 'customer',
         emailNotifications: true,
@@ -354,7 +358,7 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
                 className="w-full py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-300 text-emerald-900 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-2xs"
               >
                 <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Quick Sign In as Demo Taxpayer (Wasim Ali)</span>
+                <span>Quick Sign In as Demo Taxpayer (Rahul Sharma)</span>
               </button>
 
               <div className="relative flex py-1 items-center">
@@ -403,13 +407,21 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
-                    type="password"
+                    type={showLoginPassword ? 'text' : 'password'}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
-                    className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:bg-white text-slate-900"
+                    className="w-full pl-9 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:bg-white text-slate-900"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                    title={showLoginPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 
@@ -530,7 +542,7 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Wasim Ali"
+                    placeholder="e.g. Rahul Sharma"
                     className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-500 text-slate-900"
                   />
                 </div>
@@ -550,7 +562,7 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="9876543210"
+                      placeholder="e.g. 9876543210"
                       className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-500 text-slate-900 font-mono"
                     />
                   </div>
@@ -604,13 +616,21 @@ export const CustomerAuthModal: React.FC<CustomerAuthModalProps> = ({
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
-                    type="password"
+                    type={showSignupPassword ? 'text' : 'password'}
                     required
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-500 text-slate-900"
+                    placeholder="Create a strong password"
+                    className="w-full pl-9 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-500 text-slate-900"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowSignupPassword(!showSignupPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                    title={showSignupPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 

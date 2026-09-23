@@ -10,7 +10,9 @@ import {
   Building2,
   KeyRound,
   FileCheck2,
-  AlertTriangle
+  AlertTriangle,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Language, UserProfile } from '../types';
 
@@ -28,6 +30,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 }) => {
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [officerCode, setOfficerCode] = useState('');
 
   const [error, setError] = useState('');
@@ -162,23 +165,6 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           )}
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
-            <div className="bg-emerald-50/80 p-3 rounded-xl border border-emerald-200 text-xs text-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div>
-                <span className="font-bold text-slate-900">Master Admin ID:</span>{' '}
-                <code className="bg-white px-2 py-0.5 rounded text-emerald-950 font-mono text-xs border border-emerald-300 font-semibold">wasimali0202@gmail.com</code>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setAdminEmail('wasimali0202@gmail.com');
-                  setAdminPassword('9007105383');
-                }}
-                className="text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-300 shadow-2xs cursor-pointer self-start sm:self-auto"
-              >
-                Auto-fill Admin ID & Key
-              </button>
-            </div>
-
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Designated Master Admin ID
@@ -192,7 +178,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                   required
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
-                  placeholder="wasimali0202@gmail.com"
+                  placeholder="Enter Admin ID / Email"
                   className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-slate-900 focus:bg-white text-slate-900 font-medium"
                 />
               </div>
@@ -207,13 +193,21 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
-                  placeholder="Enter admin password (9007105383)"
-                  className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-slate-900 focus:bg-white text-slate-900 font-medium"
+                  placeholder="Enter Admin Password"
+                  className="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-slate-900 focus:bg-white text-slate-900 font-medium"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
