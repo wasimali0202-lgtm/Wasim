@@ -1,0 +1,6 @@
+{
+  "name": "TaxReturn Portal",
+  "description": "Comprehensive income tax return filing dashboard portal with authentication, tax computation, document management, payment gateway, and e-filing acknowledgment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
